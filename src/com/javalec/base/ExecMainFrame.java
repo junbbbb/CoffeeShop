@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,7 +29,6 @@ public class ExecMainFrame {
 	private JLabel lblSearchBar;
 	private JTextField tfSearch;
 	private JTextField tfTime;
-	
 
 	// panel declaration
 	ExecDashboardPanel execDashboardPanel = new ExecDashboardPanel();
@@ -59,7 +57,7 @@ public class ExecMainFrame {
 	 */
 	public ExecMainFrame() {
 		initialize();
-		
+
 	}
 
 	/**
@@ -84,7 +82,7 @@ public class ExecMainFrame {
 		frame.getContentPane().add(getTfInventoryManage());
 		frame.getContentPane().add(getTfMenuManage());
 		frame.getContentPane().add(getTfNoticeManage());
-	
+
 		frame.getContentPane().add(execDashboardPanel);
 		frame.getContentPane().add(getLblBackground());
 		frame.getContentPane().add(getTfDashboard());
@@ -172,6 +170,7 @@ public class ExecMainFrame {
 		}
 		return panelAdminMain;
 	}
+
 	private JTextField tfDashboard;
 	private JTextField tfSalesManage;
 	private JTextField tfEmployeeManage;
@@ -214,7 +213,7 @@ public class ExecMainFrame {
 					tfMenuManage.setForeground(new Color(0, 0, 0));
 					tfEmployeeManage.setBackground(new Color(240, 240, 240));
 					tfEmployeeManage.setForeground(new Color(0, 0, 0));
-					
+
 					tfShow.setText("대시보드");
 
 				}
@@ -256,7 +255,6 @@ public class ExecMainFrame {
 					tfShow.setText("매장관리");
 					tfEmployeeManage.setBackground(new Color(240, 240, 240));
 					tfEmployeeManage.setForeground(new Color(0, 0, 0));
-					
 
 				}
 			});
@@ -296,7 +294,7 @@ public class ExecMainFrame {
 					tfDashboard.setForeground(new Color(0, 0, 0));
 					tfMenuManage.setBackground(new Color(240, 240, 240));
 					tfMenuManage.setForeground(new Color(0, 0, 0));
-					
+
 					tfShow.setText("직원관리");
 				}
 			});
@@ -311,18 +309,45 @@ public class ExecMainFrame {
 		return tfEmployeeManage;
 	}
 
-	private JTextField getTfSalesManage() {
-		if (tfSalesManage == null) {
-			tfSalesManage = new JTextField();
-			tfSalesManage.setEditable(false);
-			tfSalesManage.setText("매출관리");
-			tfSalesManage.setFont(new Font("굴림", Font.PLAIN, 22));
-			tfSalesManage.setHorizontalAlignment(SwingConstants.CENTER);
-			tfSalesManage.setColumns(10);
-			tfSalesManage.setBounds(0, 220, 130, 36);
-			tfSalesManage.setBorder(null);
+	private JTextField getTfMenuManage() {
+		if (tfMenuManage == null) {
+			tfMenuManage = new JTextField();
+			tfMenuManage.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					panelAdminMain.setVisible(false);
+					execDashboardPanel.setVisible(false);
+					execStoreManagePanel.setVisible(false);
+					execEmployeeManagePanel.setVisible(false);
+
+					execMenuManagePanel.setVisible(true);
+					execMenuManagePanel.setBounds(167, 55, 1059, 617);
+					execMenuManagePanel.setLayout(null);
+					frame.getContentPane().add(execMenuManagePanel);
+					tfSearch.setVisible(false);
+					lblSearchBar.setVisible(false);
+					tfMenuManage.setBackground(new Color(226, 161, 101));
+					tfMenuManage.setForeground(new Color(255, 255, 255));
+					tfStoreManage.setBackground(new Color(240, 240, 240));
+					tfStoreManage.setForeground(new Color(0, 0, 0));
+					tfDashboard.setBackground(new Color(240, 240, 240));
+					tfDashboard.setForeground(new Color(0, 0, 0));
+
+					tfEmployeeManage.setBackground(new Color(240, 240, 240));
+					tfEmployeeManage.setForeground(new Color(0, 0, 0));
+
+					tfShow.setText("메뉴관리");
+				}
+			});
+			tfMenuManage.setEditable(false);
+			tfMenuManage.setText("메뉴관리");
+			tfMenuManage.setFont(new Font("굴림", Font.PLAIN, 22));
+			tfMenuManage.setHorizontalAlignment(SwingConstants.CENTER);
+			tfMenuManage.setColumns(10);
+			tfMenuManage.setBounds(0, 220, 130, 36);
+			tfMenuManage.setBorder(null);
 		}
-		return tfSalesManage;
+		return tfMenuManage;
 	}
 
 	private JTextField getTfAdManage() {
@@ -367,45 +392,18 @@ public class ExecMainFrame {
 		return tfInventoryManage;
 	}
 
-	private JTextField getTfMenuManage() {
-		if (tfMenuManage == null) {
-			tfMenuManage = new JTextField();
-			tfMenuManage.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					panelAdminMain.setVisible(false);
-					execDashboardPanel.setVisible(false);
-					execStoreManagePanel.setVisible(false);
-					execEmployeeManagePanel.setVisible(false);
-
-					execMenuManagePanel.setVisible(true);
-					execMenuManagePanel.setBounds(167, 55, 1059, 617);
-					execMenuManagePanel.setLayout(null);
-					frame.getContentPane().add(execMenuManagePanel);
-					tfSearch.setVisible(false);
-					lblSearchBar.setVisible(false);
-					tfMenuManage.setBackground(new Color(226, 161, 101));
-					tfMenuManage.setForeground(new Color(255, 255, 255));
-					tfStoreManage.setBackground(new Color(240, 240, 240));
-					tfStoreManage.setForeground(new Color(0, 0, 0));
-					tfDashboard.setBackground(new Color(240, 240, 240));
-					tfDashboard.setForeground(new Color(0, 0, 0));
-					
-					tfEmployeeManage.setBackground(new Color(240, 240, 240));
-					tfEmployeeManage.setForeground(new Color(0, 0, 0));
-					
-					tfShow.setText("메뉴관리");
-				}
-			});
-			tfMenuManage.setEditable(false);
-			tfMenuManage.setText("메뉴관리");
-			tfMenuManage.setFont(new Font("굴림", Font.PLAIN, 22));
-			tfMenuManage.setHorizontalAlignment(SwingConstants.CENTER);
-			tfMenuManage.setColumns(10);
-			tfMenuManage.setBounds(0, 420, 130, 36);
-			tfMenuManage.setBorder(null);
+	private JTextField getTfSalesManage() {
+		if (tfSalesManage == null) {
+			tfSalesManage = new JTextField();
+			tfSalesManage.setEditable(false);
+			tfSalesManage.setText("매출관리");
+			tfSalesManage.setFont(new Font("굴림", Font.PLAIN, 22));
+			tfSalesManage.setHorizontalAlignment(SwingConstants.CENTER);
+			tfSalesManage.setColumns(10);
+			tfSalesManage.setBounds(0, 420, 130, 36);
+			tfSalesManage.setBorder(null);
 		}
-		return tfMenuManage;
+		return tfSalesManage;
 	}
 
 	private JTextField getTfNoticeManage() {
@@ -429,14 +427,17 @@ public class ExecMainFrame {
 		}
 		return pnAdminMain;
 	}
+
 	private JLabel getLblBackground() {
 		if (lblBackground == null) {
 			lblBackground = new JLabel("");
 			lblBackground.setBounds(0, 0, 1280, 721);
-			lblBackground.setIcon(new ImageIcon(ExecMainFrame.class.getResource("/com/javalec/image/ExecFrameLine.png")));
+			lblBackground
+					.setIcon(new ImageIcon(ExecMainFrame.class.getResource("/com/javalec/image/ExecFrameLine.png")));
 		}
 		return lblBackground;
 	}
+
 	private JLabel getLblAlarmIcons() {
 		if (lblAlarmIcons == null) {
 			lblAlarmIcons = new JLabel("");
@@ -445,14 +446,17 @@ public class ExecMainFrame {
 		}
 		return lblAlarmIcons;
 	}
+
 	private JLabel getLblProfilePicture() {
 		if (lblProfilePicture == null) {
 			lblProfilePicture = new JLabel("");
-			lblProfilePicture.setIcon(new ImageIcon(ExecMainFrame.class.getResource("/com/javalec/image/SukjinFace.png")));
+			lblProfilePicture
+					.setIcon(new ImageIcon(ExecMainFrame.class.getResource("/com/javalec/image/SukjinFace.png")));
 			lblProfilePicture.setBounds(1110, 4, 34, 41);
 		}
 		return lblProfilePicture;
 	}
+
 	private JTextField getTfExecName() {
 		if (tfExecName == null) {
 			tfExecName = new JTextField();
