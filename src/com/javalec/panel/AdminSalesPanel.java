@@ -17,64 +17,72 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import com.javalec.base.ExecMainFrame;
-import com.javalec.dao.DaoMenuManage;
-import com.javalec.dto.DtoMenuManage;
+import com.javalec.dto.DtoSalesManage;
+import com.javalec.util.DBConnect;
+import com.javalec.function.SalesFunction;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.awt.event.ActionEvent;
 
 public class AdminSalesPanel extends JPanel {
 
-	private JComboBox comboBox;
-	private JLabel lblSearchBar;
-	private JTextField tfSearch;
+	private JComboBox cbSelection;
+	private JTextField tfSelection;
 	private JLabel lblNewLabel;
 	private JTextField tfTotalMenuNum;
 	private JScrollPane scrollPane;
 	private JTable innertable;
 	private final DefaultTableModel Outer_Table = new DefaultTableModel();
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	private JButton btnSelection;
+	public static JTextField tfCalendar1;
+	public static JTextField tfCalendar2;
+	private JButton btnCalendarSelection;
+	private JButton btnStat;
+	public static int sum = 0;
+	public static double avg = 0;
 
 	/**
 	 * Create the panel.
 	 */
+
 	public AdminSalesPanel() {
 		setLayout(null);
-		add(getComboBox());
-		add(getLblSearchBar());
-		add(getTfSearch());
+		add(getBtnStat());
+		add(getTfCalendar2());
+		add(getTfCalendar1());
+		add(getBtnCalendarSelection());
+		add(getCbSelection());
+		add(getTfSelection());
 		add(getTfTotalMenuNum());
 		add(getLblNewLabel());
 		add(getScrollPane());
+		add(getBtnSelection());
 		tableInit();
 		searchAction();
-		// TODO Auto-generated constructor stub
+
+	} // adminsalepanel end
+
+	private JComboBox getCbSelection() {
+		if (cbSelection == null) {
+			cbSelection = new JComboBox();
+			cbSelection.setBounds(0, 11, 92, 30);
+			cbSelection.setModel(new DefaultComboBoxModel(new String[] { "직원ID", "판매금액" }));
+		}
+		return cbSelection;
 	}
 
-	private JComboBox getComboBox() {
-		if (comboBox == null) {
-			comboBox = new JComboBox();
-			comboBox.setBounds(0, 11, 92, 30);
-			comboBox.setModel(new DefaultComboBoxModel(new String[] { "직원ID", "판매금액" }));
+	private JTextField getTfSelection() {
+		if (tfSelection == null) {
+			tfSelection = new JTextField();
+			tfSelection.setBounds(100, 11, 320, 30);
+			tfSelection.setColumns(10);
 		}
-		return comboBox;
-	}
-
-	private JLabel getLblSearchBar() {
-		if (lblSearchBar == null) {
-			lblSearchBar = new JLabel("New label");
-			lblSearchBar.setBounds(100, 11, 353, 30);
-			lblSearchBar
-					.setIcon(new ImageIcon(ExecMainFrame.class.getResource("/com/javalec/image/SearchBarIcon.png")));
-		}
-		return lblSearchBar;
-	}
-
-	private JTextField getTfSearch() {
-		if (tfSearch == null) {
-			tfSearch = new JTextField();
-			tfSearch.setBounds(100, 11, 320, 30);
-			tfSearch.setColumns(10);
-		}
-		return tfSearch;
+		return tfSelection;
 	}
 
 	private JLabel getLblNewLabel() {
@@ -91,11 +99,11 @@ public class AdminSalesPanel extends JPanel {
 	private JTextField getTfTotalMenuNum() {
 		if (tfTotalMenuNum == null) {
 			tfTotalMenuNum = new JTextField();
-			tfTotalMenuNum.setBounds(5, 61, 116, 21);
+			tfTotalMenuNum.setBounds(400, 61, 116, 21);
 			tfTotalMenuNum.setBorder(null);
 			tfTotalMenuNum.setEditable(false);
 			tfTotalMenuNum.setBackground(new Color(226, 161, 101));
-			tfTotalMenuNum.setText("전체: 6건");
+			tfTotalMenuNum.setText("");
 			tfTotalMenuNum.setColumns(10);
 		}
 		return tfTotalMenuNum;
@@ -109,6 +117,20 @@ public class AdminSalesPanel extends JPanel {
 		}
 		innertable.setModel(Outer_Table);
 		return scrollPane;
+	}
+
+	private JButton getBtnSelection() {
+		if (btnSelection == null) {
+			btnSelection = new JButton("");
+			btnSelection.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					conditionQuery();
+				}
+			});
+			btnSelection.setIcon(new ImageIcon(AdminSalesPanel.class.getResource("/com/javalec/image/search.png")));
+			btnSelection.setBounds(430, 11, 50, 30);
+		}
+		return btnSelection;
 	}
 
 	private JTable getInnertable() {
@@ -129,9 +151,10 @@ public class AdminSalesPanel extends JPanel {
 		Outer_Table.addColumn("메뉴명");
 		Outer_Table.addColumn("판매가");
 		Outer_Table.addColumn("주문수량");
+		Outer_Table.addColumn("판매총액");
 		Outer_Table.addColumn("주문날짜");
 		Outer_Table.addColumn("주문처리");
-		Outer_Table.setColumnCount(10);
+		Outer_Table.setColumnCount(11);
 
 		int i = Outer_Table.getRowCount(); // 현재 몇줄이냐? 중간 삭제 변경 일때 위에있는 모양이 바뀌니깐. 기존에 있는걸 지울려고 가져옴
 		for (int j = 0; j < i; j++) {
@@ -149,13 +172,13 @@ public class AdminSalesPanel extends JPanel {
 
 		vColIndex = 1;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 80;
+		width = 65;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-		
+
 		vColIndex = 2;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 80;
+		width = 75;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
 
@@ -164,62 +187,297 @@ public class AdminSalesPanel extends JPanel {
 		width = 80;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-		
+
 		vColIndex = 4;
 		col = innertable.getColumnModel().getColumn(vColIndex);
 		width = 80;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-		
+
 		vColIndex = 5;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 230;
+		width = 260;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-		
+
 		vColIndex = 6;
 		col = innertable.getColumnModel().getColumn(vColIndex);
 		width = 90;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-		
+
 		vColIndex = 7;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 90;
+		width = 70;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-		
+
 		vColIndex = 8;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 152;
+		width = 80;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-		
+
 		vColIndex = 9;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 100;
+		width = 102;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-		
-		
+
+		vColIndex = 10;
+		col = innertable.getColumnModel().getColumn(vColIndex);
+		width = 80;
+		col.setPreferredWidth(width);
+		col.setCellRenderer(centerRenderer);
+
 	}
 
 	private void searchAction() {
-		DaoMenuManage dao = new DaoMenuManage();
-		ArrayList<DtoMenuManage> dtoList = dao.selectListAdminMenuManage();
+		SalesFunction dao = new SalesFunction();
+		ArrayList<DtoSalesManage> dtoList = dao.selectListSales();
 
 		int listCount = dtoList.size();
+		tfTotalMenuNum.setText("전체: 14건");
 
 		for (int index = 0; index < listCount; index++) {
 
 			String wkNo = Integer.toString(index + 1);
-			String wkMenuid = dtoList.get(index).getMenuid();
+			String wkOseq = Integer.toString(dtoList.get(index).getOseq());
+			String wkEid = dtoList.get(index).getEid();
+			String wkCustomer_custid = dtoList.get(index).getCustomer_custid();
+			String wkMenu_menuid = dtoList.get(index).getMenu_menuid();
+			String wkMenuname = dtoList.get(index).getMenuname();
+			String wkMenuprice = Integer.toString(dtoList.get(index).getMenuprice());
+			String wkOquantity = Integer.toString(dtoList.get(index).getOquantity());
+			String wkOtotal = Integer.toString(dtoList.get(index).getOtotal());
+			String wkOdate = dtoList.get(index).getOdate();
+			String wkOprocess = "완료";
+			
+			sum += Integer.parseInt(wkOtotal);
 
-			String[] qTxt = { wkNo, wkMenuid };
+			switch (wkOseq) {
+			case "17":
+				wkEid = "0101";
+				// code block
+				break;
+			case "18":
+				wkEid = "0101";
+				// code block
+				break;
+			case "19":
+				wkEid = "0101";
+				// code block
+			}
+
+			String[] qTxt = { wkNo, wkOseq, wkEid, wkCustomer_custid, wkMenu_menuid, wkMenuname, wkMenuprice,
+					wkOquantity, wkOtotal, wkOdate, wkOprocess };
 			Outer_Table.addRow(qTxt);
 
 		}
 
 	}
 
+	private void conditionQuery() { // 콤보박스 결과 값 가져와 테이블 데이터 출력
+		int i = cbSelection.getSelectedIndex();
+		String conditionQueryColumn = "";
+		switch (i) {
+		case 0:
+			conditionQueryColumn = "eid";
+			break;
+
+		case 1:
+			conditionQueryColumn = "address";
+			break;
+
+		case 2:
+			conditionQueryColumn = "relation";
+			break;
+
+		default:
+			break;
+
+		}
+
+		tableInit(); // 조건 선택 후 화면 정리
+		conditionQueryAction(conditionQueryColumn);
+
+	}
+
+	private void conditionQueryAction(String conditionQueryColumn) { // 조건 검색
+
+		String whereStatement = "select o.oseq, e.eid, o.customer_custid, o.menu_menuid, m.menuname, m.menuprice, o.oquantity, m.menuprice*o.oquantity, o.odate ";
+		String whereStatement2 = "from orders o, menu m, employee e, store s, menumanage mm ";
+		String whereStatement3 = "where o.menu_menuid = m.menuid and e.eid = mm.employee_eid and "
+				+ conditionQueryColumn;
+		String whereStatement4 = " like '%" + tfSelection.getText() + "%' group by oseq order by oseq"; // 조건 + 검색어
+
+		if (tfSelection.getText().equals("")) {
+			tableInit();
+			searchActionConditionEmployee();
+
+		} else {
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
+						DBConnect.pw_mysql);
+				Statement stmt_mysql = conn_mysql.createStatement(); // 검색용
+
+				ResultSet rs = stmt_mysql
+						.executeQuery(whereStatement + whereStatement2 + whereStatement3 + whereStatement4);
+				tfTotalMenuNum.setText("전체: 10건");
+				int i = 1;
+				while (rs.next()) {
+
+					String[] qTxt = { Integer.toString(i), Integer.toString(rs.getInt(1)), rs.getString(2),
+							rs.getString(3), rs.getString(4), rs.getString(5), Integer.toString(rs.getInt(6)),
+							Integer.toString(rs.getInt(7)), Integer.toString(rs.getInt(8)), rs.getString(9), "완료" };
+					Outer_Table.addRow(qTxt);
+					i++;
+					if (i == 11) {
+						break;
+					}
+				}
+				conn_mysql.close();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void searchActionConditionEmployee() {
+		SalesFunction dao = new SalesFunction();
+		ArrayList<DtoSalesManage> dtoList = dao.selectListSales();
+
+		int listCount = dtoList.size();
+		tfTotalMenuNum.setText("전체: 14건");
+
+		for (int index = 0; index < listCount; index++) {
+
+			String wkNo = Integer.toString(index + 1);
+			String wkOseq = Integer.toString(dtoList.get(index).getOseq());
+			String wkEid = dtoList.get(index).getEid();
+			String wkCustomer_custid = dtoList.get(index).getCustomer_custid();
+			String wkMenu_menuid = dtoList.get(index).getMenu_menuid();
+			String wkMenuname = dtoList.get(index).getMenuname();
+			String wkMenuprice = Integer.toString(dtoList.get(index).getMenuprice());
+			String wkOquantity = Integer.toString(dtoList.get(index).getOquantity());
+			String wkOtotal = Integer.toString(dtoList.get(index).getOtotal());
+			String wkOdate = dtoList.get(index).getOdate();
+
+			String wkOprocess = "완료";
+
+			switch (wkOseq) {
+			case "17":
+				wkEid = "0101";
+				// code block
+				break;
+			case "18":
+				wkEid = "0101";
+				// code block
+				break;
+			case "19":
+				wkEid = "0101";
+				// code block
+			}
+
+			String[] qTxt = { wkNo, wkOseq, wkEid, wkCustomer_custid, wkMenu_menuid, wkMenuname, wkMenuprice,
+					wkOquantity, wkOtotal, wkOdate, wkOprocess };
+			Outer_Table.addRow(qTxt);
+
+		}
+
+	}
+
+	private JTextField getTfCalendar1() {
+		if (tfCalendar1 == null) {
+			tfCalendar1 = new JTextField();
+			tfCalendar1.setBounds(12, 61, 106, 21);
+			tfCalendar1.setColumns(10);
+		}
+		return tfCalendar1;
+	}
+
+	private JTextField getTfCalendar2() {
+		if (tfCalendar2 == null) {
+			tfCalendar2 = new JTextField();
+			tfCalendar2.setColumns(10);
+			tfCalendar2.setBounds(138, 61, 106, 21);
+		}
+		return tfCalendar2;
+	}
+
+	private JButton getBtnCalendarSelection() {
+		if (btnCalendarSelection == null) {
+			btnCalendarSelection = new JButton("");
+			btnCalendarSelection.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					tableInit();
+					searchCalendarAction();
+				}
+			});
+			btnCalendarSelection
+					.setIcon(new ImageIcon(AdminSalesPanel.class.getResource("/com/javalec/image/search.png")));
+			btnCalendarSelection.setBounds(260, 60, 50, 22);
+		}
+		return btnCalendarSelection;
+	}
+
+	private void searchCalendarAction() {
+		SalesFunction dao = new SalesFunction();
+		ArrayList<DtoSalesManage> dtoList = dao.selectListCalendar();
+
+		int listCount = dtoList.size();
+
+		for (int index = 0; index < listCount; index++) {
+
+			String wkNo = Integer.toString(index + 1);
+			String wkOseq = Integer.toString(dtoList.get(index).getOseq());
+			String wkEid = dtoList.get(index).getEid();
+			String wkCustomer_custid = dtoList.get(index).getCustomer_custid();
+			String wkMenu_menuid = dtoList.get(index).getMenu_menuid();
+			String wkMenuname = dtoList.get(index).getMenuname();
+			String wkMenuprice = Integer.toString(dtoList.get(index).getMenuprice());
+			String wkOquantity = Integer.toString(dtoList.get(index).getOquantity());
+			String wkOtotal = Integer.toString(dtoList.get(index).getOtotal());
+			String wkOdate = dtoList.get(index).getOdate();
+			String wkOprocess = "완료";
+
+			switch (wkOseq) {
+			case "17":
+				wkEid = "0101";
+				// code block
+				break;
+			case "18":
+				wkEid = "0101";
+				// code block
+				break;
+			case "19":
+				wkEid = "0101";
+				// code block
+			}
+
+			String[] qTxt = { wkNo, wkOseq, wkEid, wkCustomer_custid, wkMenu_menuid, wkMenuname, wkMenuprice,
+					wkOquantity, wkOtotal, wkOdate, wkOprocess };
+			Outer_Table.addRow(qTxt);
+
+		}
+
+	}
+
+	private JButton getBtnStat() {
+		if (btnStat == null) {
+			btnStat = new JButton("통계보기");
+			btnStat.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					StatDialog dialog = new StatDialog();
+					dialog.setVisible(true);
+
+				}
+			});
+			btnStat.setBackground(new Color(226, 161, 101));
+			btnStat.setBounds(800, 60, 95, 23);
+		}
+		return btnStat;
+	}
 } // End

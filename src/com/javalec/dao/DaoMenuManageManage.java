@@ -17,7 +17,7 @@ public class DaoMenuManageManage {
 
 		ArrayList<DtoMenuManageManage> dtoList = new ArrayList<DtoMenuManageManage>();
 
-		String whereStatement = "select *" + " from menumanage";
+		String whereStatement = "select mmenddate" + " from menumanage";
 		try {
 
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -32,7 +32,7 @@ public class DaoMenuManageManage {
 
 			while (rs.next()) {
 
-				String wkMenddate = rs.getString(5);
+				String wkMenddate = rs.getString(1);
 
 				DtoMenuManageManage dto = new DtoMenuManageManage(wkMenddate);
 				dtoList.add(dto);
