@@ -202,8 +202,8 @@ public class AdminMenuManagePanel extends JPanel {
 
 			String wkNo = Integer.toString(index + 1);
 			String wkMenuid = dtoList.get(index).getMenuid();
-			String wkMenuname = dtoList.get(index).getMenuname();
-			String wkMenucategory = dtoList.get(index).getMenucategory();
+			String wkMenuname = dtoList.get(index).getMenucategory();
+			String wkMenucategory = dtoList.get(index).getMenuname();
 			String wkMenuprice = Integer.toString(dtoList.get(index).getMenuprice());
 			String wkMenusell = dtoList2.get(index).getMmenddate();
 

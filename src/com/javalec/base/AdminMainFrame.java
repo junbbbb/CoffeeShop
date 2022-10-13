@@ -21,10 +21,11 @@ import com.javalec.panel.AdminEmployeeManagePanel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+
 // 관리자 로그인 시 첫 화면 (프레임)
 public class AdminMainFrame {
 
-	private JFrame frame;
+	public JFrame frame;
 	private JTextField tfCafeName;
 	private JTextField tfShow;
 	private JLabel lblSearchBar;
@@ -341,15 +342,14 @@ public class AdminMainFrame {
 					adminStoreManagePanel.setVisible(false);
 					adminEmployeeManagePanel.setVisible(false);
 					adminMenuManagePanel.setVisible(false);
-					
+
 					adminSalesPanel.setVisible(true);
 					adminSalesPanel.setBounds(167, 55, 1059, 617);
 					adminSalesPanel.setLayout(null);
 					frame.getContentPane().add(adminSalesPanel);
 					tfSearch.setVisible(false);
 					lblSearchBar.setVisible(false);
-					
-					
+
 					tfSalesManage.setBackground(new Color(226, 161, 101));
 					tfSalesManage.setForeground(new Color(255, 255, 255));
 					tfDashboard.setBackground(new Color(240, 240, 240));
@@ -472,4 +472,7 @@ public class AdminMainFrame {
 		return tfAdminName;
 	}
 
+	
+	
+	
 } // End

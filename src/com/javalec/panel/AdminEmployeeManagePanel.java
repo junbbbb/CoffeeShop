@@ -6,9 +6,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-
 import com.javalec.base.AdminMainFrame;
 import com.javalec.dao.DaoEmployeeManage;
 import com.javalec.dto.DtoEmployeeManage;
@@ -37,10 +34,8 @@ public class AdminEmployeeManagePanel extends JPanel {
 	private JTable innertable;
 	private JTextField tfEmployeeManageMsg;
 
-
 	private final DefaultTableModel Outer_Table = new DefaultTableModel();
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-	
 
 	/**
 	 * Create the panel.
@@ -120,7 +115,7 @@ public class AdminEmployeeManagePanel extends JPanel {
 		}
 		return tfTotalEmployeeNum;
 	}
-	
+
 	private JTextField getTfEmployeeManageMsg() {
 		if (tfEmployeeManageMsg == null) {
 			tfEmployeeManageMsg = new JTextField();
@@ -214,13 +209,12 @@ public class AdminEmployeeManagePanel extends JPanel {
 		width = 170;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-		
+
 		vColIndex = 7;
 		col = innertable.getColumnModel().getColumn(vColIndex);
 		width = 110;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-
 
 	}
 
