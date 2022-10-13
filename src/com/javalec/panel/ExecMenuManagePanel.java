@@ -19,7 +19,9 @@ import javax.swing.table.TableColumn;
 
 import com.javalec.base.ExecMainFrame;
 import com.javalec.dao.DaoEmployeeManage;
+import com.javalec.dao.DaoMenuManage;
 import com.javalec.dto.DtoEmployeeManage;
+import com.javalec.dto.DtoMenuManage;
 
 public class ExecMenuManagePanel extends JPanel {
 	private JComboBox comboBox;
@@ -32,6 +34,7 @@ public class ExecMenuManagePanel extends JPanel {
 	private JScrollPane scrollPane;
 	private JTable innertable;
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	private JTextField tfStoreNumMsg;
 
 	/**
 	 * Create the panel.
@@ -42,8 +45,9 @@ public class ExecMenuManagePanel extends JPanel {
 		add(getLblSearchBar());
 		add(getTfSearch());
 		add(getTfTotalMenuNum());
-		add(getLblNewLabel());
 		add(getScrollPane());
+		add(getTfStoreNumMsg());
+		add(getLblNewLabel());
 		tableInit();
 		searchAction();
 
@@ -109,7 +113,7 @@ public class ExecMenuManagePanel extends JPanel {
 		Outer_Table.addColumn("분류");
 		Outer_Table.addColumn("메뉴명");
 		Outer_Table.addColumn("판매가");
-		Outer_Table.addColumn("판매여부");
+		Outer_Table.addColumn("판매 매장 수");
 
 		Outer_Table.setColumnCount(6); // 몇개인지 알려줘야함.
 
@@ -153,24 +157,57 @@ public class ExecMenuManagePanel extends JPanel {
 
 		vColIndex = 5;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 70;
+		width = 100;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
 
 	}
 
 	private void searchAction() {
-		DaoEmployeeManage dao = new DaoEmployeeManage();
-		ArrayList<DtoEmployeeManage> dtoList = dao.selectList();
+		DaoMenuManage dao = new DaoMenuManage();
+		ArrayList<DtoMenuManage> dtoList = dao.selectList();
 
 		int listCount = dtoList.size();
 
 		for (int index = 0; index < listCount; index++) {
-			String wkEid = dtoList.get(index).getEid();
-			String wkEname = dtoList.get(index).getEname();
-			String wkErank = dtoList.get(index).getErank();
-			String wkEindate = dtoList.get(index).getEindate();
-			String[] qTxt = { wkEid, wkEname, wkErank, wkEindate };
+
+			// 메뉴 분류 시작
+			ArrayList<String> category = new ArrayList<>();
+			category.add("커피");
+			category.add("베버리지");
+			category.add("쥬스");
+			// 메뉴 분류 끝
+
+			// 임의 판매 매장 수 시작
+			ArrayList<Integer> saleStoreNum = new ArrayList<>();
+			saleStoreNum.add(2);
+			saleStoreNum.add(2);
+			saleStoreNum.add(3);
+			saleStoreNum.add(3);
+			saleStoreNum.add(3);
+			saleStoreNum.add(3);
+			saleStoreNum.add(3);
+			saleStoreNum.add(1);
+			// 임의 판매 매장 수 끝
+
+			String wkNo = Integer.toString(index + 1);
+			String wkMenuid = dtoList.get(index).getMenuid();
+			String wkMenucategory = null;
+
+			// 메뉴 분류 할당 시작
+			if (wkMenuid.contains("B")) {
+				wkMenucategory = category.get(1);
+			} else if (wkMenuid.contains("C")) {
+				wkMenucategory = category.get(0);
+			} else if (wkMenuid.contains("J")) {
+				wkMenucategory = category.get(2);
+			}
+			// 메뉴 분류 할당 끝
+
+			String wkMenuname = dtoList.get(index).getMenuname();
+			String wkMenuprice = Integer.toString(dtoList.get(index).getMenuprice());
+			String wkMenusalestorenum = Integer.toString(saleStoreNum.get(index));
+			String[] qTxt = { wkNo, wkMenuid, wkMenucategory, wkMenuname, wkMenuprice, wkMenusalestorenum };
 			Outer_Table.addRow(qTxt);
 		}
 
@@ -192,5 +229,17 @@ public class ExecMenuManagePanel extends JPanel {
 			innertable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		}
 		return innertable;
+	}
+
+	private JTextField getTfStoreNumMsg() {
+		if (tfStoreNumMsg == null) {
+			tfStoreNumMsg = new JTextField();
+			tfStoreNumMsg.setBackground(new Color(225, 161, 101));
+			tfStoreNumMsg.setText("판매 매장 수를 클릭하면 매장 목록이 나옵니다.");
+			tfStoreNumMsg.setBounds(767, 61, 250, 21);
+			tfStoreNumMsg.setColumns(10);
+			tfStoreNumMsg.setBorder(null);
+		}
+		return tfStoreNumMsg;
 	}
 } // End

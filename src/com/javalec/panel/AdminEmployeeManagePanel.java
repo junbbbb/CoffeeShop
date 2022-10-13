@@ -2,6 +2,7 @@ package com.javalec.panel;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
 
@@ -33,8 +35,12 @@ public class AdminEmployeeManagePanel extends JPanel {
 	private JTextField tfTotalEmployeeNum;
 	private JScrollPane scrollPane;
 	private JTable innertable;
+	private JTextField tfEmployeeManageMsg;
+
 
 	private final DefaultTableModel Outer_Table = new DefaultTableModel();
+	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	
 
 	/**
 	 * Create the panel.
@@ -55,8 +61,9 @@ public class AdminEmployeeManagePanel extends JPanel {
 		add(getLblSearchBar());
 		add(getTfSearch());
 		add(getTfTotalEmployeeNum());
-		add(getLblNewLabel());
 		add(getScrollPane());
+		add(getTfEmployeeManageMsg());
+		add(getLblNewLabel());
 		tableInit();
 		searchAction();
 
@@ -113,6 +120,18 @@ public class AdminEmployeeManagePanel extends JPanel {
 		}
 		return tfTotalEmployeeNum;
 	}
+	
+	private JTextField getTfEmployeeManageMsg() {
+		if (tfEmployeeManageMsg == null) {
+			tfEmployeeManageMsg = new JTextField();
+			tfEmployeeManageMsg.setText("계좌정보 및 상세정보는 해당 직원을 클릭하여 확인하세요.");
+			tfEmployeeManageMsg.setBorder(null);
+			tfEmployeeManageMsg.setBackground(new Color(226, 161, 101));
+			tfEmployeeManageMsg.setBounds(700, 61, 320, 21);
+			tfEmployeeManageMsg.setColumns(10);
+		}
+		return tfEmployeeManageMsg;
+	}
 
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
@@ -135,12 +154,12 @@ public class AdminEmployeeManagePanel extends JPanel {
 	// TableInit
 	private void tableInit() {
 
-		Outer_Table.addColumn("직원ID"); // 테이블위에 쓰이는것들
+		Outer_Table.addColumn("No");
+		Outer_Table.addColumn("직원ID");
 		Outer_Table.addColumn("이름");
 		Outer_Table.addColumn("직급");
 		Outer_Table.addColumn("전화번호");
-		Outer_Table.addColumn("주소");
-		Outer_Table.addColumn("생년월일");
+		Outer_Table.addColumn("주소"); // 5
 		Outer_Table.addColumn("이메일");
 		Outer_Table.addColumn("입사일");
 
@@ -152,61 +171,76 @@ public class AdminEmployeeManagePanel extends JPanel {
 		}
 
 		innertable.setAutoResizeMode(innertable.AUTO_RESIZE_OFF); // 태이블끼리 왓다갓다하면 따른짓을 많이해야해서 끈다.
+		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
 		int vColIndex = 0;
 		TableColumn col = innertable.getColumnModel().getColumn(vColIndex);
-		int width = 45;
+		int width = 40;
 		col.setPreferredWidth(width);
+		col.setCellRenderer(centerRenderer);
 
 		vColIndex = 1;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 70;
+		width = 60;
 		col.setPreferredWidth(width);
+		col.setCellRenderer(centerRenderer);
 
 		vColIndex = 2;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 70;
+		width = 80;
 		col.setPreferredWidth(width);
+		col.setCellRenderer(centerRenderer);
 
 		vColIndex = 3;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 250;
+		width = 70;
 		col.setPreferredWidth(width);
+		col.setCellRenderer(centerRenderer);
 
 		vColIndex = 4;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 170;
+		width = 120;
 		col.setPreferredWidth(width);
+		col.setCellRenderer(centerRenderer);
 
 		vColIndex = 5;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 100;
+		width = 372;
 		col.setPreferredWidth(width);
+		col.setCellRenderer(centerRenderer);
 
 		vColIndex = 6;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 126;
+		width = 170;
 		col.setPreferredWidth(width);
-
+		col.setCellRenderer(centerRenderer);
+		
 		vColIndex = 7;
 		col = innertable.getColumnModel().getColumn(vColIndex);
-		width = 192;
+		width = 110;
 		col.setPreferredWidth(width);
+		col.setCellRenderer(centerRenderer);
+
 
 	}
 
 	private void searchAction() {
 		DaoEmployeeManage dao = new DaoEmployeeManage();
-		ArrayList<DtoEmployeeManage> dtoList = dao.selectList();
+		ArrayList<DtoEmployeeManage> dtoList = dao.selectListAdminEmployeeManage();
 
 		int listCount = dtoList.size();
 
 		for (int index = 0; index < listCount; index++) {
+			String wkNo = Integer.toString(index + 1);
 			String wkEid = dtoList.get(index).getEid();
 			String wkEname = dtoList.get(index).getEname();
 			String wkErank = dtoList.get(index).getErank();
+			String wkEtelno = dtoList.get(index).getEtelno();
+			String wkEaddress = dtoList.get(index).getEaddress();
+			String wkEemail = dtoList.get(index).getEemail();
 			String wkEindate = dtoList.get(index).getEindate();
-			String[] qTxt = { wkEid, wkEname, wkErank, wkEindate };
+
+			String[] qTxt = { wkNo, wkEid, wkEname, wkErank, wkEtelno, wkEaddress, wkEemail, wkEindate };
 			Outer_Table.addRow(qTxt);
 		}
 

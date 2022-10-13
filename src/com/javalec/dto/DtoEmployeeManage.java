@@ -1,15 +1,11 @@
 package com.javalec.dto;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-
 public class DtoEmployeeManage {
 	String eid;
 	String ename;
 	String erank;
 	String eindate;
 	String etelno;
-	String ebday;
 	String eemail;
 	String eaddress;
 
@@ -20,23 +16,18 @@ public class DtoEmployeeManage {
 		this.erank = erank;
 		this.eindate = eindate;
 	}
-	
-	
 
-	public DtoEmployeeManage(String eid, String ename, String erank, String eindate, String etelno, String ebday,
-			String eemail, String eaddress) {
+	public DtoEmployeeManage(String eid, String ename, String erank, String eindate, String etelno, String eemail,
+			String eaddress) {
 		super();
 		this.eid = eid;
 		this.ename = ename;
 		this.erank = erank;
 		this.eindate = eindate;
 		this.etelno = etelno;
-		this.ebday = ebday;
 		this.eemail = eemail;
 		this.eaddress = eaddress;
 	}
-
-
 
 	public String getEid() {
 		return eid;
@@ -76,14 +67,6 @@ public class DtoEmployeeManage {
 
 	public void setEtelno(String etelno) {
 		this.etelno = etelno;
-	}
-
-	public String getEbday() {
-		return ebday;
-	}
-
-	public void setEbday(String ebday) {
-		this.ebday = ebday;
 	}
 
 	public String getEemail() {
