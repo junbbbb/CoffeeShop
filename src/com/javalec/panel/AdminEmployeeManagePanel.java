@@ -110,7 +110,7 @@ public class AdminEmployeeManagePanel extends JPanel {
 			tfTotalEmployeeNum.setBorder(null);
 			tfTotalEmployeeNum.setEditable(false);
 			tfTotalEmployeeNum.setBackground(new Color(226, 161, 101));
-			tfTotalEmployeeNum.setText("전체: 13건");
+			tfTotalEmployeeNum.setText("");
 			tfTotalEmployeeNum.setColumns(10);
 		}
 		return tfTotalEmployeeNum;
@@ -223,6 +223,7 @@ public class AdminEmployeeManagePanel extends JPanel {
 		ArrayList<DtoEmployeeManage> dtoList = dao.selectListAdminEmployeeManage();
 
 		int listCount = dtoList.size();
+		tfTotalEmployeeNum.setText("전체: " + listCount +"건");
 
 		for (int index = 0; index < listCount; index++) {
 			String wkNo = Integer.toString(index + 1);

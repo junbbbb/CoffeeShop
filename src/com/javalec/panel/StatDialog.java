@@ -17,7 +17,8 @@ import java.awt.event.ActionEvent;
 public class StatDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	AdminSalesPanel adSale = new AdminSalesPanel();
+	int tempSum = 0;
+	double tempAvg = 0;
 
 	/**
 	 * Launch the application.
@@ -36,7 +37,7 @@ public class StatDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public StatDialog() {
-		setBounds(100, 100, 450, 300);
+		setBounds(500, 300, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -51,13 +52,21 @@ public class StatDialog extends JDialog {
 			lblAvg.setBounds(20, 45, 85, 15);
 			contentPanel.add(lblAvg);
 		}
-		{
-			JLabel lblSumResult = new JLabel(Integer.toString(AdminSalesPanel.sum));
-			lblSumResult.setBounds(117, 20, 100, 15);
-			contentPanel.add(lblSumResult);
+
+		if (AdminSalesPanel.sum == 0) {
+			tempSum = ExecSalesPanel.sum;
+			tempAvg = ExecSalesPanel.avg;
+		} else if (ExecSalesPanel.sum == 0) {
+			tempSum = AdminSalesPanel.sum;
+			tempAvg = AdminSalesPanel.avg;
 		}
+
+		JLabel lblSumResult = new JLabel(Integer.toString(tempSum));
+		lblSumResult.setBounds(117, 20, 100, 15);
+		contentPanel.add(lblSumResult);
+
 		{
-			JLabel lblAvgResult = new JLabel(String.valueOf(AdminSalesPanel.avg));
+			JLabel lblAvgResult = new JLabel(String.valueOf(tempAvg));
 			lblAvgResult.setBounds(117, 45, 100, 15);
 			contentPanel.add(lblAvgResult);
 		}
@@ -66,7 +75,6 @@ public class StatDialog extends JDialog {
 			btnExit.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					setVisible(false);
-					AdminSalesPanel.sum = 0;
 				}
 			});
 			btnExit.setBounds(329, 220, 95, 23);
@@ -78,5 +86,4 @@ public class StatDialog extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		}
 	}
-
 }

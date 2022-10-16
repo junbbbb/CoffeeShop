@@ -22,6 +22,7 @@ import com.javalec.dao.DaoEmployeeManage;
 import com.javalec.dao.DaoMenuManage;
 import com.javalec.dto.DtoEmployeeManage;
 import com.javalec.dto.DtoMenuManage;
+import javax.swing.JButton;
 
 public class ExecMenuManagePanel extends JPanel {
 	private JComboBox comboBox;
@@ -35,12 +36,18 @@ public class ExecMenuManagePanel extends JPanel {
 	private JTable innertable;
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	private JTextField tfStoreNumMsg;
+	private JButton btnDelete;
+	private JButton btnUpdate;
+	private JButton btnInsert;
 
 	/**
 	 * Create the panel.
 	 */
 	public ExecMenuManagePanel() {
 		setLayout(null);
+		add(getBtnUpdate());
+		add(getBtnInsert());
+		add(getBtnDelete());
 		add(getComboBox());
 		add(getLblSearchBar());
 		add(getTfSearch());
@@ -98,7 +105,7 @@ public class ExecMenuManagePanel extends JPanel {
 			tfTotalMenuNum.setBorder(null);
 			tfTotalMenuNum.setEditable(false);
 			tfTotalMenuNum.setBackground(new Color(226, 161, 101));
-			tfTotalMenuNum.setText("전체: 24건");
+			tfTotalMenuNum.setText("");
 			tfTotalMenuNum.setBounds(5, 61, 116, 21);
 			tfTotalMenuNum.setColumns(10);
 		}
@@ -168,6 +175,7 @@ public class ExecMenuManagePanel extends JPanel {
 		ArrayList<DtoMenuManage> dtoList = dao.selectList();
 
 		int listCount = dtoList.size();
+		tfTotalMenuNum.setText("전체: " + listCount + "건");
 
 		for (int index = 0; index < listCount; index++) {
 
@@ -241,5 +249,26 @@ public class ExecMenuManagePanel extends JPanel {
 			tfStoreNumMsg.setBorder(null);
 		}
 		return tfStoreNumMsg;
+	}
+	private JButton getBtnDelete() {
+		if (btnDelete == null) {
+			btnDelete = new JButton("삭제");
+			btnDelete.setBounds(685, 61, 70, 21);
+		}
+		return btnDelete;
+	}
+	private JButton getBtnUpdate() {
+		if (btnUpdate == null) {
+			btnUpdate = new JButton("수정");
+			btnUpdate.setBounds(605, 61, 70, 21);
+		}
+		return btnUpdate;
+	}
+	private JButton getBtnInsert() {
+		if (btnInsert == null) {
+			btnInsert = new JButton("등록");
+			btnInsert.setBounds(525, 61, 70, 21);
+		}
+		return btnInsert;
 	}
 } // End

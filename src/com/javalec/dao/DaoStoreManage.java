@@ -26,7 +26,7 @@ public ArrayList<DtoStoreManage> selectList(){
 		
 		ArrayList<DtoStoreManage> dtoList = new ArrayList<DtoStoreManage>();
 		
-		String whereStatement = "select storeseq, sname, saddress, stelno, scrn, sopendate from store ";
+		String whereStatement = "select storeseq2, sname, saddress, stelno, scrn, sopendate from store ";
 		try {
 			
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -42,14 +42,14 @@ public ArrayList<DtoStoreManage> selectList(){
 			// while은 false 하면 끝나버림
 			while (rs.next()) {
 				
-				String wkStoreseq = rs.getString(1);
+				String wkStoreseq2 = rs.getString(1);
 				String wkSname = rs.getString(2); // 컬럼이름쓰던가 번호쓰던가 내맘임
 				String wkSaddress = rs.getString(3);
 				String wkStelno = rs.getString(4);
 				String wkScrn = rs.getString(5);
 				String wkSopendate = rs.getString(6);
 				
-				DtoStoreManage dto = new DtoStoreManage(wkStoreseq, wkSname, wkSaddress, wkStelno, wkScrn, wkSopendate);
+				DtoStoreManage dto = new DtoStoreManage(wkStoreseq2, wkSname, wkSaddress, wkStelno, wkScrn, wkSopendate);
 				dtoList.add(dto);
 			}
 

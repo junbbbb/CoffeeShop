@@ -97,7 +97,7 @@ public class AdminMenuManagePanel extends JPanel {
 			tfTotalMenuNum.setBorder(null);
 			tfTotalMenuNum.setEditable(false);
 			tfTotalMenuNum.setBackground(new Color(226, 161, 101));
-			tfTotalMenuNum.setText("전체: 24건");
+			tfTotalMenuNum.setText("");
 			tfTotalMenuNum.setColumns(10);
 		}
 		return tfTotalMenuNum;
@@ -196,6 +196,7 @@ public class AdminMenuManagePanel extends JPanel {
 
 		int listCount = dtoList.size();
 		String wkMenusell2;
+		tfTotalMenuNum.setText("전체: " + listCount + "건");
 
 		for (int index = 0; index < listCount; index++) {
 		

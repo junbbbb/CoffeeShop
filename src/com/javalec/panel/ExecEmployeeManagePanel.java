@@ -26,6 +26,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
+import javax.swing.JButton;
 
 public class ExecEmployeeManagePanel extends JPanel {
 	private JComboBox comboBox;
@@ -40,6 +41,9 @@ public class ExecEmployeeManagePanel extends JPanel {
 
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	private JTextField tfEmployeeManageMsg;
+	private JButton btnDelete;
+	private JButton btnUpdate;
+	private JButton btnInsert;
 
 	/**
 	 * Create the panel.
@@ -56,6 +60,9 @@ public class ExecEmployeeManagePanel extends JPanel {
 			}
 		});
 		setLayout(null);
+		add(getBtnUpdate());
+		add(getBtnInsert());
+		add(getBtnDelete());
 		add(getComboBox());
 		add(getLblSearchBar());
 		add(getTfSearch());
@@ -114,7 +121,7 @@ public class ExecEmployeeManagePanel extends JPanel {
 			tfTotalEmployeeNum.setBorder(null);
 			tfTotalEmployeeNum.setEditable(false);
 			tfTotalEmployeeNum.setBackground(new Color(226, 161, 101));
-			tfTotalEmployeeNum.setText("전체: 13건");
+			tfTotalEmployeeNum.setText("");
 			tfTotalEmployeeNum.setColumns(10);
 		}
 		return tfTotalEmployeeNum;
@@ -216,6 +223,7 @@ public class ExecEmployeeManagePanel extends JPanel {
 		ArrayList<DtoEmployeeManage> dtoList = dao.selectList();
 
 		int listCount = dtoList.size();
+		tfTotalEmployeeNum.setText("전체: " + listCount +"건");
 
 		for (int index = 0; index < listCount; index++) {
 			String wkNo = Integer.toString(index + 1);
@@ -243,5 +251,26 @@ public class ExecEmployeeManagePanel extends JPanel {
 			tfEmployeeManageMsg.setColumns(10);
 		}
 		return tfEmployeeManageMsg;
+	}
+	private JButton getBtnDelete() {
+		if (btnDelete == null) {
+			btnDelete = new JButton("삭제");
+			btnDelete.setBounds(617, 61, 70, 21);
+		}
+		return btnDelete;
+	}
+	private JButton getBtnUpdate() {
+		if (btnUpdate == null) {
+			btnUpdate = new JButton("수정");
+			btnUpdate.setBounds(537, 61, 70, 21);
+		}
+		return btnUpdate;
+	}
+	private JButton getBtnInsert() {
+		if (btnInsert == null) {
+			btnInsert = new JButton("등록");
+			btnInsert.setBounds(457, 61, 70, 21);
+		}
+		return btnInsert;
 	}
 } // End
