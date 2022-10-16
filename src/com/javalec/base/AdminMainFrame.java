@@ -25,7 +25,7 @@ import java.awt.event.MouseEvent;
 // 관리자 로그인 시 첫 화면 (프레임)
 public class AdminMainFrame {
 
-	public JFrame frame;
+	private JFrame frame;
 	private JTextField tfCafeName;
 	private JTextField tfShow;
 	private JLabel lblSearchBar;

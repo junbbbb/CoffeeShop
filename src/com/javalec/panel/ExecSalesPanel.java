@@ -21,6 +21,8 @@ import javax.swing.table.TableColumn;
 import com.javalec.dto.DtoSalesManage;
 import com.javalec.util.DBConnect;
 import com.javalec.function.AdminSalesFunction;
+import com.javalec.function.ExecSalesFunction;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -29,7 +31,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
 
-public class AdminSalesPanel extends JPanel {
+public class ExecSalesPanel extends JPanel {
 
 	private JComboBox cbSelection;
 	public static JTextField tfSelection;
@@ -52,7 +54,7 @@ public class AdminSalesPanel extends JPanel {
 	 * Create the panel.
 	 */
 
-	public AdminSalesPanel() {
+	public ExecSalesPanel() {
 		setLayout(null);
 		add(getBtnStat());
 		add(getTfCalendar2());
@@ -129,7 +131,7 @@ public class AdminSalesPanel extends JPanel {
 					conditionQuery();
 				}
 			});
-			btnSelection.setIcon(new ImageIcon(AdminSalesPanel.class.getResource("/com/javalec/image/search.png")));
+			btnSelection.setIcon(new ImageIcon(ExecSalesPanel.class.getResource("/com/javalec/image/search.png")));
 			btnSelection.setBounds(430, 11, 50, 30);
 		}
 		return btnSelection;
@@ -235,7 +237,7 @@ public class AdminSalesPanel extends JPanel {
 	}
 
 	private void searchAction() {
-		AdminSalesFunction dao = new AdminSalesFunction();
+		ExecSalesFunction dao = new ExecSalesFunction();
 		ArrayList<DtoSalesManage> dtoList = dao.selectListSales();
 
 		int listCount = dtoList.size();
@@ -301,7 +303,7 @@ public class AdminSalesPanel extends JPanel {
 			searchAction();
 
 		} else {
-			AdminSalesFunction dao = new AdminSalesFunction();
+			ExecSalesFunction dao = new ExecSalesFunction();
 			ArrayList<DtoSalesManage> dtoList = dao.selectListSalesCondition();
 
 			int listCount = dtoList.size();
@@ -364,14 +366,14 @@ public class AdminSalesPanel extends JPanel {
 				}
 			});
 			btnCalendarSelection
-					.setIcon(new ImageIcon(AdminSalesPanel.class.getResource("/com/javalec/image/search.png")));
+					.setIcon(new ImageIcon(ExecSalesPanel.class.getResource("/com/javalec/image/search.png")));
 			btnCalendarSelection.setBounds(260, 60, 50, 22);
 		}
 		return btnCalendarSelection;
 	}
 
 	private void searchCalendarAction() {
-		AdminSalesFunction dao = new AdminSalesFunction();
+		ExecSalesFunction dao = new ExecSalesFunction();
 		ArrayList<DtoSalesManage> dtoList = dao.selectListCalendar();
 
 		int listCount = dtoList.size();

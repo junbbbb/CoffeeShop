@@ -28,6 +28,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
+import javax.swing.JButton;
 
 public class ExecStoreManagePanel extends JPanel {
 	private JComboBox comboBox;
@@ -40,6 +41,9 @@ public class ExecStoreManagePanel extends JPanel {
 
 	private final DefaultTableModel Outer_Table = new DefaultTableModel();
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	private JButton btnInsert;
+	private JButton btnUpdate;
+	private JButton btnDelete;
 
 	/**
 	 * Create the panel.
@@ -56,6 +60,9 @@ public class ExecStoreManagePanel extends JPanel {
 			}
 		});
 		setLayout(null);
+		add(getBtnDelete());
+		add(getBtnUpdate());
+		add(getBtnInsert());
 		add(getComboBox());
 		add(getLblSearchBar());
 		add(getTfSearch());
@@ -113,7 +120,7 @@ public class ExecStoreManagePanel extends JPanel {
 			tfTotalStoreNum.setBorder(null);
 			tfTotalStoreNum.setEditable(false);
 			tfTotalStoreNum.setBackground(new Color(226, 161, 101));
-			tfTotalStoreNum.setText("전체: 208건");
+			tfTotalStoreNum.setText("");
 			tfTotalStoreNum.setColumns(10);
 		}
 		return tfTotalStoreNum;
@@ -225,22 +232,45 @@ public class ExecStoreManagePanel extends JPanel {
 		ArrayList<DtoEmployeeManage> dtoList2 = dao2.selectList();
 
 		int listCount = dtoList.size();
+		tfTotalStoreNum.setText("전체: " + listCount + "건");
 
 		for (int index = 0; index < listCount; index++) {
 			String wkNo = Integer.toString(index + 1);
-			String wkStoreseq = dtoList.get(index).getStoreseq();
+			String wkStoreseq2 = dtoList.get(index).getstoreseq2();
 			String wkSname = dtoList.get(index).getSname();
 			String wkSaddress = dtoList.get(index).getSaddress();
 			String wkStelno = dtoList.get(index).getStelno();
-			String wkEid = dtoList2.get(index + 2).getEid(); // 지점장 직원ID 불러오기 * for문은 listCount만큼 돎. index <= listCount
-																// 시, 에러
+			String wkEid = dtoList2.get(index + 2).getEid(); 
+			// 지점장 직원ID 불러오기 * for문은 listCount만큼 돎. index <= listCount 시, 에러
+			// 미완성 코드. 지점장 특정을 index + 2로 한 허접한 코드임. sql문으로 erank = 지점장 or 이클립스에서 ...?
+														
 			String wkEname = dtoList2.get(index + 2).getEname();
 			String wkSopendate = dtoList.get(index).getSopendate();
 			String wkScrn = dtoList.get(index).getScrn();
-			String[] qTxt = { wkNo, wkStoreseq, wkSname, wkSaddress, wkStelno, wkEid, wkEname, wkSopendate, wkScrn };
+			String[] qTxt = { wkNo, wkStoreseq2, wkSname, wkSaddress, wkStelno, wkEid, wkEname, wkSopendate, wkScrn };
 			Outer_Table.addRow(qTxt);
 		}
 
 	}
-
+	private JButton getBtnInsert() {
+		if (btnInsert == null) {
+			btnInsert = new JButton("등록");
+			btnInsert.setBounds(767, 61, 70, 21);
+		}
+		return btnInsert;
+	}
+	private JButton getBtnUpdate() {
+		if (btnUpdate == null) {
+			btnUpdate = new JButton("수정");
+			btnUpdate.setBounds(847, 61, 70, 21);
+		}
+		return btnUpdate;
+	}
+	private JButton getBtnDelete() {
+		if (btnDelete == null) {
+			btnDelete = new JButton("삭제");
+			btnDelete.setBounds(927, 61, 70, 21);
+		}
+		return btnDelete;
+	}
 } // End

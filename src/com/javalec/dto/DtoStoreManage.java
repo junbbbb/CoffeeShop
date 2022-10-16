@@ -2,7 +2,7 @@ package com.javalec.dto;
 
 public class DtoStoreManage {
 
-	String storeseq;
+	String storeseq2;
 	String sname;
 	String saddress;
 	String stelno;
@@ -10,11 +10,11 @@ public class DtoStoreManage {
 	String sclosedate;
 	String sopendate;
 
-	public DtoStoreManage(String storeseq, String sname, String saddress, String stelno, String scrn,
+	public DtoStoreManage(String storeseq2, String sname, String saddress, String stelno, String scrn,
 			String sopendate) {
 
 		super();
-		this.storeseq = storeseq;
+		this.storeseq2 = storeseq2;
 		this.sname = sname;
 		this.saddress = saddress;
 		this.stelno = stelno;
@@ -22,12 +22,12 @@ public class DtoStoreManage {
 		this.sopendate = sopendate;
 	}
 
-	public String getStoreseq() {
-		return storeseq;
+	public String getstoreseq2() {
+		return storeseq2;
 	}
 
-	public void setStoreseq(String storeseq) {
-		this.storeseq = storeseq;
+	public void setstoreseq2(String storeseq2) {
+		this.storeseq2 = storeseq2;
 	}
 
 	public String getSname() {
