@@ -1,4 +1,4 @@
-package com.javalec.panel;
+package com.javalec.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.javalec.base.AdminMainFrame;
+import com.javalec.panel.AdminSalesPanel;
+import com.javalec.panel.ExecSalesPanel;
 
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
