@@ -264,7 +264,6 @@ public class ExecMainFrame {
 					tfSalesManage.setBackground(new Color(240, 240, 240));
 					tfSalesManage.setForeground(new Color(0, 0, 0));
 
-
 				}
 			});
 			tfStoreManage.setText("매장관리");
@@ -306,7 +305,6 @@ public class ExecMainFrame {
 					tfMenuManage.setForeground(new Color(0, 0, 0));
 					tfSalesManage.setBackground(new Color(240, 240, 240));
 					tfSalesManage.setForeground(new Color(0, 0, 0));
-
 
 					tfShow.setText("직원관리");
 				}
@@ -352,7 +350,6 @@ public class ExecMainFrame {
 					tfSalesManage.setBackground(new Color(240, 240, 240));
 					tfSalesManage.setForeground(new Color(0, 0, 0));
 
-
 					tfShow.setText("메뉴관리");
 				}
 			});
@@ -366,6 +363,7 @@ public class ExecMainFrame {
 		}
 		return tfMenuManage;
 	}
+
 	private JTextField getTfSalesManage() {
 		if (tfSalesManage == null) {
 			tfSalesManage = new JTextField();
@@ -407,7 +405,6 @@ public class ExecMainFrame {
 		}
 		return tfSalesManage;
 	}
-	
 
 	private JTextField getTfMemberManage() {
 		if (tfMemberManage == null) {
@@ -436,7 +433,7 @@ public class ExecMainFrame {
 		}
 		return tfInventoryManage;
 	}
-	
+
 	private JTextField getTfAdManage() {
 		if (tfAdManage == null) {
 			tfAdManage = new JTextField();

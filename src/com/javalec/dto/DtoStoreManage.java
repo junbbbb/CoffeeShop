@@ -6,28 +6,47 @@ public class DtoStoreManage {
 	String sname;
 	String saddress;
 	String stelno;
+	String eid;
+	String ename;
 	String scrn;
 	String sclosedate;
 	String sopendate;
 
-	public DtoStoreManage(String storeseq2, String sname, String saddress, String stelno, String scrn,
-			String sopendate) {
-
+	public DtoStoreManage(String storeseq2, String sname, String saddress, String stelno, String eid, String ename,
+			String scrn, String sopendate) {
 		super();
 		this.storeseq2 = storeseq2;
 		this.sname = sname;
 		this.saddress = saddress;
 		this.stelno = stelno;
+		this.eid = eid;
+		this.ename = ename;
 		this.scrn = scrn;
 		this.sopendate = sopendate;
 	}
 
-	public String getstoreseq2() {
+	public String getStoreseq2() {
 		return storeseq2;
 	}
 
-	public void setstoreseq2(String storeseq2) {
+	public void setStoreseq2(String storeseq2) {
 		this.storeseq2 = storeseq2;
+	}
+
+	public String getEid() {
+		return eid;
+	}
+
+	public void setEid(String eid) {
+		this.eid = eid;
+	}
+
+	public String getEname() {
+		return ename;
+	}
+
+	public void setEname(String ename) {
+		this.ename = ename;
 	}
 
 	public String getSname() {

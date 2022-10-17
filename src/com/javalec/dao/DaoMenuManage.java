@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.javalec.dto.DtoMenuManage;
+import com.javalec.panel.ExecMenuManagePanel;
+import com.javalec.panel.ExecSalesPanel;
 import com.javalec.util.DBConnect;
 
 public class DaoMenuManage {
@@ -16,6 +18,8 @@ public class DaoMenuManage {
 
 	String conname; // 컬럼이름
 	String condata; // 데이터값
+	
+	// --------------- 메뉴 전체 출력 -----------------
 
 	public ArrayList<DtoMenuManage> selectList() {
 
@@ -50,6 +54,50 @@ public class DaoMenuManage {
 		return dtoList;
 	}
 
+	// ------------------ 조건 검색 ---------------------------
+	
+	public ArrayList<DtoMenuManage> selectListConditionQuery() {
+
+		ArrayList<DtoMenuManage> dtoList = new ArrayList<DtoMenuManage>();
+
+		String whereStatement = "select menuid, menuname, menuprice from menu ";
+		String whereStatement2 = "where " + ExecMenuManagePanel.conditionQueryColumn;
+		String whereStatement3 = " like '%" + ExecMenuManagePanel.tfSelection.getText().trim() + "%'"; // 조건 + 검색어
+
+		try {
+
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
+					DBConnect.pw_mysql);
+
+			// 입력할떄 필요없음 검색할떄 필요함
+			Statement stmt_mysql = conn_mysql.createStatement();
+
+			ResultSet rs = stmt_mysql.executeQuery(whereStatement + whereStatement2 + whereStatement3);
+
+			while (rs.next()) {
+
+				String wkMenuid = rs.getString(1);
+				String wkMenuname = rs.getString(2);
+				int wkMenuprice = rs.getInt(3);
+				DtoMenuManage dto = new DtoMenuManage(wkMenuid, wkMenuname, wkMenuprice);
+				dtoList.add(dto);
+			}
+
+			conn_mysql.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dtoList;
+	}
+	
+	
+	
+	
+	
+	// ----------------- 지점장 메뉴관리 ---------------------
+	
 	public ArrayList<DtoMenuManage> selectListAdminMenuManage() {
 
 		ArrayList<DtoMenuManage> dtoList = new ArrayList<DtoMenuManage>();

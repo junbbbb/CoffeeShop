@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import com.javalec.dialog.StatDialog;
 import com.javalec.dto.DtoSalesManage;
 import com.javalec.util.DBConnect;
 import com.javalec.function.AdminSalesFunction;

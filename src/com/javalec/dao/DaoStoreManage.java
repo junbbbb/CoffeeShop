@@ -6,7 +6,11 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.javalec.dialog.UpdateStore;
+import com.javalec.dto.DtoSalesManage;
 import com.javalec.dto.DtoStoreManage;
+import com.javalec.panel.ExecSalesPanel;
+import com.javalec.panel.ExecStoreManagePanel;
 import com.javalec.util.DBConnect;
 
 public class DaoStoreManage {
@@ -20,45 +24,136 @@ public class DaoStoreManage {
 
 	String conname; // 컬럼이름
 	String condata; // 데이터값
-	
-	
-public ArrayList<DtoStoreManage> selectList(){
-		
-		ArrayList<DtoStoreManage> dtoList = new ArrayList<DtoStoreManage>();
-		
-		String whereStatement = "select storeseq2, sname, saddress, stelno, scrn, sopendate from store ";
-		try {
-			
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			// 연결
-			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql, DBConnect.pw_mysql);
-			// 데이터베이스에 접근을 하겠다 선언한것이다.
 
-			// 입력할떄 필요없음 검색할떄 필요함
+	// ---------- 모든 매장 출력 ----------------
+
+	public ArrayList<DtoStoreManage> selectList() {
+
+		ArrayList<DtoStoreManage> dtoList = new ArrayList<DtoStoreManage>();
+
+		String whereStatement = "select storeseq2, sname, saddress, stelno, eid, ename, scrn, sopendate "
+				+ "from store";
+		try {
+
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
+					DBConnect.pw_mysql);
+
 			Statement stmt_mysql = conn_mysql.createStatement();
 
 			ResultSet rs = stmt_mysql.executeQuery(whereStatement);
 
-			// while은 false 하면 끝나버림
 			while (rs.next()) {
-				
+
 				String wkStoreseq2 = rs.getString(1);
-				String wkSname = rs.getString(2); // 컬럼이름쓰던가 번호쓰던가 내맘임
+				String wkSname = rs.getString(2);
 				String wkSaddress = rs.getString(3);
 				String wkStelno = rs.getString(4);
-				String wkScrn = rs.getString(5);
-				String wkSopendate = rs.getString(6);
-				
-				DtoStoreManage dto = new DtoStoreManage(wkStoreseq2, wkSname, wkSaddress, wkStelno, wkScrn, wkSopendate);
+				String wkEid = rs.getString(5);
+				String wkEname = rs.getString(6);
+				String wkScrn = rs.getString(7);
+				String wkSopendate = rs.getString(8);
+
+				DtoStoreManage dto = new DtoStoreManage(wkStoreseq2, wkSname, wkSaddress, wkStelno, wkEid, wkEname,
+						wkScrn, wkSopendate);
 				dtoList.add(dto);
 			}
 
-			conn_mysql.close(); // 클로즈하기 내가쓰고 클로즈해야 다른사람도 들어간다.
+			conn_mysql.close();
 
 		} catch (Exception e) {
-			e.printStackTrace(); // 개발할떈 이렇게 쓰지만 나중엔 메세지로 잠시만 기다려주세요 등 쓰면됨.
+			e.printStackTrace();
 		}
 		return dtoList;
-	}//Select List
+	}
 
+	// --------------- 조건 검색 결과 출력 ----------------------
+
+	public ArrayList<DtoStoreManage> selectListSalesCondition() {
+
+		ArrayList<DtoStoreManage> dtoList = new ArrayList<DtoStoreManage>();
+
+		String whereStatement = "select storeseq2, sname, saddress, stelno, eid, ename, scrn, sopendate "
+				+ "from store where ";
+		String whereStatement2 = ExecStoreManagePanel.conditionQueryColumn + " like '%"
+				+ ExecStoreManagePanel.tfSelection.getText().trim() + "%' order by storeseq2";
+
+		try {
+
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
+					DBConnect.pw_mysql);
+
+			Statement stmt_mysql = conn_mysql.createStatement();
+
+			ResultSet rs = stmt_mysql.executeQuery(whereStatement + whereStatement2);
+
+			while (rs.next()) {
+
+				String wkStoreseq2 = rs.getString(1);
+				String wkSname = rs.getString(2);
+				String wkSaddress = rs.getString(3);
+				String wkStelno = rs.getString(4);
+				String wkEid = rs.getString(5);
+				String wkEname = rs.getString(6);
+				String wkScrn = rs.getString(7);
+				String wkSopendate = rs.getString(8);
+
+				DtoStoreManage dto = new DtoStoreManage(wkStoreseq2, wkSname, wkSaddress, wkStelno, wkEid, wkEname,
+						wkScrn, wkSopendate);
+				dtoList.add(dto);
+			}
+
+			conn_mysql.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dtoList;
+	}
+
+	// ---------------- 수정 및 삭제용 검색 ------------------
+	public ArrayList<DtoStoreManage> selectListUpdate() {
+
+		ArrayList<DtoStoreManage> dtoList = new ArrayList<DtoStoreManage>();
+
+		String whereStatement = "select storeseq2, sname, saddress, stelno, eid, ename, scrn, sopendate "
+				+ "from store where ";
+		String whereStatement2 = UpdateStore.conditionQueryColumn + " like '%"
+				+ UpdateStore.tfSelection.getText().trim() + "%' order by storeseq2";
+
+		try {
+
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(DBConnect.url_mysql, DBConnect.id_mysql,
+					DBConnect.pw_mysql);
+
+			Statement stmt_mysql = conn_mysql.createStatement();
+
+			ResultSet rs = stmt_mysql.executeQuery(whereStatement + whereStatement2);
+
+			while (rs.next()) {
+
+				String wkStoreseq2 = rs.getString(1);
+				String wkSname = rs.getString(2);
+				String wkSaddress = rs.getString(3);
+				String wkStelno = rs.getString(4);
+				String wkEid = rs.getString(5);
+				String wkEname = rs.getString(6);
+				String wkScrn = rs.getString(7);
+				String wkSopendate = rs.getString(8);
+
+				DtoStoreManage dto = new DtoStoreManage(wkStoreseq2, wkSname, wkSaddress, wkStelno, wkEid, wkEname,
+						wkScrn, wkSopendate);
+				dtoList.add(dto);
+			}
+
+			conn_mysql.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dtoList;
+	}
+	
 } // End

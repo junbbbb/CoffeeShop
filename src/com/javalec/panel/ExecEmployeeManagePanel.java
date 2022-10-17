@@ -12,9 +12,12 @@ import java.sql.DriverManager;
 import com.javalec.base.AdminMainFrame;
 import com.javalec.dao.DaoEmployeeManage;
 import com.javalec.dto.DtoEmployeeManage;
+import com.javalec.dto.DtoSalesManage;
+import com.javalec.function.ExecSalesFunction;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import java.awt.Color;
@@ -27,15 +30,18 @@ import javax.swing.SwingConstants;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ExecEmployeeManagePanel extends JPanel {
-	private JComboBox comboBox;
-	private JLabel lblSearchBar;
-	private JTextField tfSearch;
+	private JComboBox cbSelection;
+	public static JTextField tfSelection;
 	private JLabel lblNewLabel;
 	private JTextField tfTotalEmployeeNum;
 	private JScrollPane scrollPane;
 	private JTable innertable;
+	public static int sum = 0;
+	public static double avg = 0;
 
 	private final DefaultTableModel Outer_Table = new DefaultTableModel();
 
@@ -44,6 +50,8 @@ public class ExecEmployeeManagePanel extends JPanel {
 	private JButton btnDelete;
 	private JButton btnUpdate;
 	private JButton btnInsert;
+	private JButton btnSelection;
+	public static String conditionQueryColumn = "";
 
 	/**
 	 * Create the panel.
@@ -60,12 +68,12 @@ public class ExecEmployeeManagePanel extends JPanel {
 			}
 		});
 		setLayout(null);
+		add(getBtnSelection());
 		add(getBtnUpdate());
 		add(getBtnInsert());
 		add(getBtnDelete());
-		add(getComboBox());
-		add(getLblSearchBar());
-		add(getTfSearch());
+		add(getCbSelection());
+		add(getTfSelection());
 		add(getTfTotalEmployeeNum());
 		add(getScrollPane());
 		add(getTfEmployeeManageMsg());
@@ -75,32 +83,22 @@ public class ExecEmployeeManagePanel extends JPanel {
 
 	}
 
-	private JComboBox getComboBox() {
-		if (comboBox == null) {
-			comboBox = new JComboBox();
-			comboBox.setBounds(0, 11, 92, 30);
-			comboBox.setModel(new DefaultComboBoxModel(new String[] { "직원ID", "직급", "전화번호", "입사일" }));
+	private JComboBox getCbSelection() {
+		if (cbSelection == null) {
+			cbSelection = new JComboBox();
+			cbSelection.setBounds(0, 11, 92, 30);
+			cbSelection.setModel(new DefaultComboBoxModel(new String[] { "직원ID", "이름", "직급", "전화번호" }));
 		}
-		return comboBox;
+		return cbSelection;
 	}
 
-	private JLabel getLblSearchBar() {
-		if (lblSearchBar == null) {
-			lblSearchBar = new JLabel("New label");
-			lblSearchBar.setBounds(100, 11, 353, 30);
-			lblSearchBar
-					.setIcon(new ImageIcon(AdminMainFrame.class.getResource("/com/javalec/image/SearchBarIcon.png")));
+	private JTextField getTfSelection() {
+		if (tfSelection == null) {
+			tfSelection = new JTextField();
+			tfSelection.setBounds(100, 11, 320, 30);
+			tfSelection.setColumns(10);
 		}
-		return lblSearchBar;
-	}
-
-	private JTextField getTfSearch() {
-		if (tfSearch == null) {
-			tfSearch = new JTextField();
-			tfSearch.setBounds(100, 11, 320, 30);
-			tfSearch.setColumns(10);
-		}
-		return tfSearch;
+		return tfSelection;
 	}
 
 	private JLabel getLblNewLabel() {
@@ -208,13 +206,12 @@ public class ExecEmployeeManagePanel extends JPanel {
 		width = 170;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-		
+
 		vColIndex = 7;
 		col = innertable.getColumnModel().getColumn(vColIndex);
 		width = 110;
 		col.setPreferredWidth(width);
 		col.setCellRenderer(centerRenderer);
-
 
 	}
 
@@ -223,7 +220,7 @@ public class ExecEmployeeManagePanel extends JPanel {
 		ArrayList<DtoEmployeeManage> dtoList = dao.selectList();
 
 		int listCount = dtoList.size();
-		tfTotalEmployeeNum.setText("전체: " + listCount +"건");
+		tfTotalEmployeeNum.setText("전체: " + listCount + "건");
 
 		for (int index = 0; index < listCount; index++) {
 			String wkNo = Integer.toString(index + 1);
@@ -252,6 +249,7 @@ public class ExecEmployeeManagePanel extends JPanel {
 		}
 		return tfEmployeeManageMsg;
 	}
+
 	private JButton getBtnDelete() {
 		if (btnDelete == null) {
 			btnDelete = new JButton("삭제");
@@ -259,6 +257,7 @@ public class ExecEmployeeManagePanel extends JPanel {
 		}
 		return btnDelete;
 	}
+
 	private JButton getBtnUpdate() {
 		if (btnUpdate == null) {
 			btnUpdate = new JButton("수정");
@@ -266,6 +265,7 @@ public class ExecEmployeeManagePanel extends JPanel {
 		}
 		return btnUpdate;
 	}
+
 	private JButton getBtnInsert() {
 		if (btnInsert == null) {
 			btnInsert = new JButton("등록");
@@ -273,4 +273,77 @@ public class ExecEmployeeManagePanel extends JPanel {
 		}
 		return btnInsert;
 	}
+
+	private JButton getBtnSelection() {
+		if (btnSelection == null) {
+			btnSelection = new JButton("");
+			btnSelection.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					conditionQuery();
+				}
+			});
+			btnSelection
+					.setIcon(new ImageIcon(ExecEmployeeManagePanel.class.getResource("/com/javalec/image/search.png")));
+			btnSelection.setBounds(430, 11, 50, 30);
+		}
+		return btnSelection;
+	}
+
+	private void conditionQuery() { // 콤보박스 결과 값 가져와 테이블 데이터 출력
+		int i = cbSelection.getSelectedIndex();
+		switch (i) {
+		case 0:
+			conditionQueryColumn = "eid";
+			break;
+
+		case 1:
+			conditionQueryColumn = "ename";
+			break;
+
+		case 2:
+			conditionQueryColumn = "erank";
+			break;
+
+		case 3:
+			conditionQueryColumn = "etelno";
+
+		default:
+			break;
+
+		}
+
+		tableInit();
+		conditionQueryAction(conditionQueryColumn);
+
+	}
+
+	private void conditionQueryAction(String conditionQueryColumn) { // 조건 검색
+
+		if (tfSelection.getText().equals("")) {
+			tableInit();
+			searchAction();
+
+		} else {
+			DaoEmployeeManage dao = new DaoEmployeeManage();
+			ArrayList<DtoEmployeeManage> dtoList = dao.selectListConditionQuery();
+
+			int listCount = dtoList.size();
+			tfTotalEmployeeNum.setText("전체: " + listCount + "건");
+
+			for (int index = 0; index < listCount; index++) {
+				String wkNo = Integer.toString(index + 1);
+				String wkEid = dtoList.get(index).getEid();
+				String wkEname = dtoList.get(index).getEname();
+				String wkErank = dtoList.get(index).getErank();
+				String wkEtelno = dtoList.get(index).getEtelno();
+				String wkEaddress = dtoList.get(index).getEaddress();
+				String wkEemail = dtoList.get(index).getEemail();
+				String wkEindate = dtoList.get(index).getEindate();
+
+				String[] qTxt = { wkNo, wkEid, wkEname, wkErank, wkEtelno, wkEaddress, wkEemail, wkEindate };
+				Outer_Table.addRow(qTxt);
+			}
+		}
+	}
+
 } // End

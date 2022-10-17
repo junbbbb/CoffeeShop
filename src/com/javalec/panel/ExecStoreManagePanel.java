@@ -1,6 +1,7 @@
 package com.javalec.panel;
 
 import javax.swing.JPanel;
+
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -12,11 +13,16 @@ import java.sql.DriverManager;
 import com.javalec.base.ExecMainFrame;
 import com.javalec.dao.DaoEmployeeManage;
 import com.javalec.dao.DaoStoreManage;
+import com.javalec.dialog.AdditionStore;
+import com.javalec.dialog.UpdateStore;
 import com.javalec.dto.DtoEmployeeManage;
+import com.javalec.dto.DtoSalesManage;
 import com.javalec.dto.DtoStoreManage;
+import com.javalec.function.ExecSalesFunction;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import java.awt.Color;
@@ -29,21 +35,25 @@ import javax.swing.SwingConstants;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ExecStoreManagePanel extends JPanel {
-	private JComboBox comboBox;
-	private JLabel lblSearchBar;
-	private JTextField tfSearch;
+	private JComboBox cbSelection;
+	public static JTextField tfSelection;
 	private JLabel lblNewLabel;
 	private JTextField tfTotalStoreNum;
 	private JScrollPane scrollPane;
 	private JTable innertable;
+	public static int sum = 0;
+	public static double avg = 0;
 
 	private final DefaultTableModel Outer_Table = new DefaultTableModel();
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	private JButton btnInsert;
 	private JButton btnUpdate;
-	private JButton btnDelete;
+	private JButton btnSelection;
+	public static String conditionQueryColumn = "";
 
 	/**
 	 * Create the panel.
@@ -60,12 +70,11 @@ public class ExecStoreManagePanel extends JPanel {
 			}
 		});
 		setLayout(null);
-		add(getBtnDelete());
+		add(getBtnSelection());
 		add(getBtnUpdate());
 		add(getBtnInsert());
-		add(getComboBox());
-		add(getLblSearchBar());
-		add(getTfSearch());
+		add(getCbSelection());
+		add(getTfSelection());
 		add(getTfTotalStoreNum());
 		add(getLblNewLabel());
 		add(getScrollPane());
@@ -74,32 +83,22 @@ public class ExecStoreManagePanel extends JPanel {
 
 	}
 
-	private JComboBox getComboBox() {
-		if (comboBox == null) {
-			comboBox = new JComboBox();
-			comboBox.setBounds(0, 11, 92, 30);
-			comboBox.setModel(new DefaultComboBoxModel(new String[] { "매장코드", "매장명", "주소", "지점장" }));
+	private JComboBox getCbSelection() {
+		if (cbSelection == null) {
+			cbSelection = new JComboBox();
+			cbSelection.setBounds(0, 11, 92, 30);
+			cbSelection.setModel(new DefaultComboBoxModel(new String[] { "매장코드", "매장명", "주소", "지점장명" }));
 		}
-		return comboBox;
+		return cbSelection;
 	}
 
-	private JLabel getLblSearchBar() {
-		if (lblSearchBar == null) {
-			lblSearchBar = new JLabel("New label");
-			lblSearchBar.setBounds(100, 11, 353, 30);
-			lblSearchBar
-					.setIcon(new ImageIcon(ExecMainFrame.class.getResource("/com/javalec/image/SearchBarIcon.png")));
+	private JTextField getTfSelection() {
+		if (tfSelection == null) {
+			tfSelection = new JTextField();
+			tfSelection.setBounds(100, 11, 320, 30);
+			tfSelection.setColumns(10);
 		}
-		return lblSearchBar;
-	}
-
-	private JTextField getTfSearch() {
-		if (tfSearch == null) {
-			tfSearch = new JTextField();
-			tfSearch.setBounds(100, 11, 320, 30);
-			tfSearch.setColumns(10);
-		}
-		return tfSearch;
+		return tfSelection;
 	}
 
 	private JLabel getLblNewLabel() {
@@ -228,23 +227,17 @@ public class ExecStoreManagePanel extends JPanel {
 		DaoStoreManage dao = new DaoStoreManage();
 		ArrayList<DtoStoreManage> dtoList = dao.selectList();
 
-		DaoEmployeeManage dao2 = new DaoEmployeeManage();
-		ArrayList<DtoEmployeeManage> dtoList2 = dao2.selectList();
-
 		int listCount = dtoList.size();
 		tfTotalStoreNum.setText("전체: " + listCount + "건");
 
 		for (int index = 0; index < listCount; index++) {
 			String wkNo = Integer.toString(index + 1);
-			String wkStoreseq2 = dtoList.get(index).getstoreseq2();
+			String wkStoreseq2 = dtoList.get(index).getStoreseq2();
 			String wkSname = dtoList.get(index).getSname();
 			String wkSaddress = dtoList.get(index).getSaddress();
 			String wkStelno = dtoList.get(index).getStelno();
-			String wkEid = dtoList2.get(index + 2).getEid(); 
-			// 지점장 직원ID 불러오기 * for문은 listCount만큼 돎. index <= listCount 시, 에러
-			// 미완성 코드. 지점장 특정을 index + 2로 한 허접한 코드임. sql문으로 erank = 지점장 or 이클립스에서 ...?
-														
-			String wkEname = dtoList2.get(index + 2).getEname();
+			String wkEid = dtoList.get(index).getEid();
+			String wkEname = dtoList.get(index).getEname();
 			String wkSopendate = dtoList.get(index).getSopendate();
 			String wkScrn = dtoList.get(index).getScrn();
 			String[] qTxt = { wkNo, wkStoreseq2, wkSname, wkSaddress, wkStelno, wkEid, wkEname, wkSopendate, wkScrn };
@@ -252,25 +245,107 @@ public class ExecStoreManagePanel extends JPanel {
 		}
 
 	}
+
 	private JButton getBtnInsert() {
 		if (btnInsert == null) {
 			btnInsert = new JButton("등록");
-			btnInsert.setBounds(767, 61, 70, 21);
+			btnInsert.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					AdditionStore additionStore = new AdditionStore();
+					additionStore.setVisible(true);
+				}
+			});
+			btnInsert.setBounds(813, 61, 70, 21);
 		}
 		return btnInsert;
 	}
+
 	private JButton getBtnUpdate() {
 		if (btnUpdate == null) {
-			btnUpdate = new JButton("수정");
-			btnUpdate.setBounds(847, 61, 70, 21);
+			btnUpdate = new JButton("수정 및 삭제");
+			btnUpdate.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					UpdateStore updateStore = new UpdateStore();
+					updateStore.setVisible(true);
+				}
+			});
+			btnUpdate.setBounds(895, 61, 108, 21);
 		}
 		return btnUpdate;
 	}
-	private JButton getBtnDelete() {
-		if (btnDelete == null) {
-			btnDelete = new JButton("삭제");
-			btnDelete.setBounds(927, 61, 70, 21);
+
+	private JButton getBtnSelection() {
+		if (btnSelection == null) {
+			btnSelection = new JButton("");
+			btnSelection.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					conditionQuery();
+				}
+			});
+			btnSelection
+					.setIcon(new ImageIcon(ExecStoreManagePanel.class.getResource("/com/javalec/image/search.png")));
+			btnSelection.setBounds(430, 11, 50, 30);
 		}
-		return btnDelete;
+		return btnSelection;
 	}
+
+	private void conditionQuery() { // 콤보박스 결과 값 가져와 테이블 데이터 출력
+		int i = cbSelection.getSelectedIndex();
+		switch (i) {
+		case 0:
+			conditionQueryColumn = "storeseq2";
+			break;
+
+		case 1:
+			conditionQueryColumn = "sname";
+			break;
+
+		case 2:
+			conditionQueryColumn = "saddress";
+			break;
+
+		case 3:
+			conditionQueryColumn = "ename";
+
+		default:
+			break;
+
+		}
+
+		tableInit();
+		conditionQueryAction(conditionQueryColumn);
+
+	}
+
+	private void conditionQueryAction(String conditionQueryColumn) { // 조건 검색
+
+		if (tfSelection.getText().equals("")) {
+			tableInit();
+			searchAction();
+
+		} else {
+
+			DaoStoreManage dao = new DaoStoreManage();
+			ArrayList<DtoStoreManage> dtoList = dao.selectListSalesCondition();
+
+			int listCount = dtoList.size();
+			tfTotalStoreNum.setText("전체: " + listCount + "건");
+
+			for (int index = 0; index < listCount; index++) {
+				String wkNo = Integer.toString(index + 1);
+				String wkStoreseq2 = dtoList.get(index).getStoreseq2();
+				String wkSname = dtoList.get(index).getSname();
+				String wkSaddress = dtoList.get(index).getSaddress();
+				String wkStelno = dtoList.get(index).getStelno();
+				String wkEid = dtoList.get(index).getEid();
+				String wkEname = dtoList.get(index).getEname();
+				String wkSopendate = dtoList.get(index).getSopendate();
+				String wkScrn = dtoList.get(index).getScrn();
+				String[] qTxt = { wkNo, wkStoreseq2, wkSname, wkSaddress, wkStelno, wkEid, wkEname, wkSopendate,
+						wkScrn };
+				Outer_Table.addRow(qTxt);
+			}
+		}
+	}
+
 } // End

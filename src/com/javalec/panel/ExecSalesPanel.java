@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import com.javalec.dialog.StatDialog;
 import com.javalec.dto.DtoSalesManage;
 import com.javalec.util.DBConnect;
 import com.javalec.function.AdminSalesFunction;
@@ -36,11 +37,10 @@ public class ExecSalesPanel extends JPanel {
 	private JComboBox cbSelection;
 	public static JTextField tfSelection;
 	private JLabel lblNewLabel;
-	private JTextField tfTotalMenuNum;
+	private JTextField tfTotalSalesNum;
 	private JScrollPane scrollPane;
 	private JTable innertable;
 	private final DefaultTableModel Outer_Table = new DefaultTableModel();
-	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	private JButton btnSelection;
 	public static JTextField tfCalendar1;
 	public static JTextField tfCalendar2;
@@ -49,6 +49,8 @@ public class ExecSalesPanel extends JPanel {
 	public static int sum = 0;
 	public static double avg = 0;
 	public static String conditionQueryColumn = "";
+
+	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 
 	/**
 	 * Create the panel.
@@ -62,7 +64,7 @@ public class ExecSalesPanel extends JPanel {
 		add(getBtnCalendarSelection());
 		add(getCbSelection());
 		add(getTfSelection());
-		add(getTfTotalMenuNum());
+		add(getTfTotalSalesNum());
 		add(getLblNewLabel());
 		add(getScrollPane());
 		add(getBtnSelection());
@@ -100,17 +102,17 @@ public class ExecSalesPanel extends JPanel {
 		return lblNewLabel;
 	}
 
-	private JTextField getTfTotalMenuNum() {
-		if (tfTotalMenuNum == null) {
-			tfTotalMenuNum = new JTextField();
-			tfTotalMenuNum.setBounds(330, 61, 116, 21);
-			tfTotalMenuNum.setBorder(null);
-			tfTotalMenuNum.setEditable(false);
-			tfTotalMenuNum.setBackground(new Color(226, 161, 101));
-			tfTotalMenuNum.setText("");
-			tfTotalMenuNum.setColumns(10);
+	private JTextField getTfTotalSalesNum() {
+		if (tfTotalSalesNum == null) {
+			tfTotalSalesNum = new JTextField();
+			tfTotalSalesNum.setBounds(330, 61, 116, 21);
+			tfTotalSalesNum.setBorder(null);
+			tfTotalSalesNum.setEditable(false);
+			tfTotalSalesNum.setBackground(new Color(226, 161, 101));
+			tfTotalSalesNum.setText("");
+			tfTotalSalesNum.setColumns(10);
 		}
-		return tfTotalMenuNum;
+		return tfTotalSalesNum;
 	}
 
 	private JScrollPane getScrollPane() {
@@ -241,7 +243,7 @@ public class ExecSalesPanel extends JPanel {
 		ArrayList<DtoSalesManage> dtoList = dao.selectListSales();
 
 		int listCount = dtoList.size();
-		tfTotalMenuNum.setText("전체: " + listCount + "건");
+		tfTotalSalesNum.setText("전체: " + listCount + "건");
 		sum = 0;
 		avg = 0;
 		for (int index = 0; index < listCount; index++) {
@@ -307,7 +309,7 @@ public class ExecSalesPanel extends JPanel {
 			ArrayList<DtoSalesManage> dtoList = dao.selectListSalesCondition();
 
 			int listCount = dtoList.size();
-			tfTotalMenuNum.setText("전체: " + listCount + "건");
+			tfTotalSalesNum.setText("전체: " + listCount + "건");
 			sum = 0;
 			avg = 0;
 			if (listCount != 0) {
@@ -379,7 +381,7 @@ public class ExecSalesPanel extends JPanel {
 		int listCount = dtoList.size();
 		sum = 0;
 		avg = 0;
-		tfTotalMenuNum.setText("전체: " + listCount + "건");
+		tfTotalSalesNum.setText("전체: " + listCount + "건");
 		if (listCount != 0) {
 			for (int index = 0; index < listCount; index++) {
 
